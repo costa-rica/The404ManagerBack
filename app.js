@@ -11,6 +11,15 @@ var app = express();
 const cors = require("cors");
 app.use(cors());
 
+const sequelize = require("./models/connection"); // Import connection
+// Sync database
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Database & tables created!");
+  })
+  .catch((error) => console.error("Error creating database tables:", error));
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
