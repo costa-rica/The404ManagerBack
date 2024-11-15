@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
 // Secret key (replace this with a secure value or an environment variable)
 const secretKey = process.env.SECRET_KEY;
@@ -18,4 +19,17 @@ function verifyToken(token) {
   }
 }
 
-module.exports = { createToken, verifyToken };
+// Function to search for a user by email
+async function findUserByEmail(email) {
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      console.log("User not found");
+    }
+    return user;
+  } catch (error) {
+    console.error("Error finding user by email:", error);
+  }
+}
+
+module.exports = { createToken, verifyToken, findUserByEmail };

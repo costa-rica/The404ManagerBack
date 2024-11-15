@@ -27,4 +27,10 @@ router.get("/areWeRunning", function (req, res, next) {
   });
 });
 
+router.get("/machineName", (req, res) => {
+  console.log(" in GET /user/register");
+  const machineName = os.hostname();
+  res.json({ machineName });
+});
+
 module.exports = router;
