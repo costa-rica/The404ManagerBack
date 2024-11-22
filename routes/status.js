@@ -38,7 +38,7 @@ router.get("/list-apps", (req, res) => {
 });
 
 // Route to start the Flask app
-app.post("/start-flask", (req, res) => {
+router.post("/start-flask", (req, res) => {
   const { appName } = req.body; // Example: { "appName": "FlaskApp" }
 
   pm2.connect((err) => {
