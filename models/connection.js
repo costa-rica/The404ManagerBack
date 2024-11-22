@@ -5,6 +5,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: `${process.env.SQLITE_STORAGE_PATH}/404serverManagerDb.sqlite`,
+  logging: false, // Disable logging
 });
 
 // Test the connection

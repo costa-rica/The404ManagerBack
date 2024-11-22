@@ -6,6 +6,7 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var statusRouter = require("./routes/status");
 
 var app = express();
 const cors = require("cors");
@@ -17,6 +18,7 @@ sequelize
   .sync()
   .then(() => {
     console.log("Database & tables created!");
+    console.log(`${process.env.SQLITE_STORAGE_PATH}/404serverManagerDb.sqlite`);
   })
   .catch((error) => console.error("Error creating database tables:", error));
 
@@ -28,5 +30,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/status", statusRouter);
 
 module.exports = app;

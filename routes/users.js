@@ -30,7 +30,7 @@ router.post("/register", async (req, res) => {
   // ? process.env.ACCEPTED_EMAILS.split(",")
   // : [];
   console.log(`acceptedEmails: ${acceptedEmails}`);
-  console.log(`tyepof acceptedEmails: ${typeof acceptedEmails[0]}`);
+  // console.log(`tyepof acceptedEmails: ${typeof acceptedEmails[0]}`);
   const isAcceptedEmail = acceptedEmails.includes(req.body.email);
   console.log("isAcceptedEmail: ", isAcceptedEmail);
   console.log("body.email", req.body.email);
@@ -51,6 +51,8 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 
+  console.log(`user.id: ${user.id}`);
+
   const token = createToken({ user_id: 1 });
 
   console.log("token: ", token);
@@ -70,6 +72,7 @@ router.post("/login", async (req, res) => {
     console.log("user.email: ", user.email);
     console.log("user.password: ", user.password);
 
+    console.log(`user.id: ${user.id}`);
     // check password
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       console.log("wrong password");
@@ -77,10 +80,14 @@ router.post("/login", async (req, res) => {
         .status(401)
         .json({ result: false, message: "Mot de passe erroné" });
     }
+
+    const token = createToken({ user_id: user.id });
+
+    console.log("token: ", token);
+    return res.json({ result: true, message: "found user", token });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-  return res.json({ result: true, message: "found user" });
 });
 
 module.exports = router;
