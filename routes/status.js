@@ -30,6 +30,7 @@ router.get("/list-apps", (req, res) => {
         id: app.pm_id,
         name: app.name,
         status: app.pm2_env.status, // Optionally include status (e.g., online, stopped)
+        port: app.pm2_env?.PORT,
       }));
 
       res.json(apps);
