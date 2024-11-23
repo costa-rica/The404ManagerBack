@@ -25,15 +25,20 @@ router.get("/list-apps", (req, res) => {
         return res.status(500).send({ error: "Failed to retrieve app list" });
       }
 
+      if (list.length == 0) {
+        return res.json({ result: true, appsList: fauxData });
+      }
       // Map the list to include only relevant details
       const apps = list.map((app) => ({
         id: app.pm_id,
         name: app.name,
         status: app.pm2_env.status, // Optionally include status (e.g., online, stopped)
         port: app.pm2_env?.PORT,
+        appProjectPath: app.cwd,
       }));
 
-      res.json(apps);
+      // return res.json(apps);
+      return res.json({ result: true, appsList: apps });
     });
   });
 });
@@ -60,5 +65,25 @@ router.post("/start-flask", (req, res) => {
     });
   });
 });
+
+const fauxData = [
+  {
+    id: 11,
+    name: "FunkyChicken",
+    status: "stopped",
+  },
+  {
+    id: 13,
+    name: "DevelopmentWebApp02",
+    status: "online",
+    port: 9992,
+  },
+  {
+    id: 14,
+    name: "The404ManagerBack",
+    status: "online",
+    port: 9999,
+  },
+];
 
 module.exports = router;
