@@ -24,40 +24,32 @@ router.get("/", function (req, res, next) {
 router.post("/register", async (req, res) => {
   console.log("in POST /register");
 
-  console.log(`accdpted emails: ${process.env.ACCEPTED_EMAILS}`);
+  const acceptedEmails = JSON.parse(process.env.ACCEPTED_EMAILS || "[]");
 
-  const acceptedEmails = process.env.ACCEPTED_EMAILS;
-  // ? process.env.ACCEPTED_EMAILS.split(",")
-  // : [];
-  console.log(`acceptedEmails: ${acceptedEmails}`);
-  // console.log(`tyepof acceptedEmails: ${typeof acceptedEmails[0]}`);
   const isAcceptedEmail = acceptedEmails.includes(req.body.email);
-  console.log("isAcceptedEmail: ", isAcceptedEmail);
-  console.log("body.email", req.body.email);
-  console.log("body", req.body.password);
-  if (!isAcceptedEmail) {
-    return res.status(401).json({ message: "This email is not accepted" });
+
+  if (process.env.NODE_ENV == "production") {
+    if (!isAcceptedEmail) {
+      console.log(" 🚨 Did not register user");
+      return res.status(401).json({ message: "This email is not accepted" });
+    } else {
+      console.log("--> mail is accepted");
+    }
+  } else {
+    console.log("--> process.env.NODE_ENV is NOT equal to production");
   }
 
   const email = req.body.email;
   const passwordHashed = bcrypt.hashSync(req.body.password, 10);
-
-  try {
-    const user = await User.create({ email, password: passwordHashed });
-    // res.status(201).json(user);
-    console.log("user added successfully 👀");
-  } catch (error) {
-    console.log("failed: ", error.message);
-    return res.status(400).json({ message: error.message });
+  const existing_user = await findUserByEmail(email);
+  if (existing_user) {
+    return res
+      .status(400)
+      .json({ result: false, message: "User exists already" });
   }
-
-  console.log(`user.id: ${user.id}`);
-
+  const user = await User.create({ email, password: passwordHashed });
   const token = createToken({ user_id: 1 });
-
-  console.log("token: ", token);
-
-  res.json({ result: true, token });
+  return res.json({ result: true, token });
 });
 
 router.post("/login", async (req, res) => {
