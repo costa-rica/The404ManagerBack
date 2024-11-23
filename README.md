@@ -11,6 +11,9 @@ PORT=3000
 SECRET_KEY=sudo_let_me_in
 ```
 
+- for the ecosystem.config.js file use:
+  `NODE_ENV: "development"` or `NODE_ENV: "production"` or `NODE_ENV: "test"`
+
 ## Serialzier
 
 `yarn add jsonwebtoken`
