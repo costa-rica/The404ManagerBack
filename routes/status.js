@@ -28,13 +28,13 @@ router.get("/list-apps", (req, res) => {
       if (list.length == 0) {
         return res.json({ result: true, appsList: fauxData });
       }
-      // Map the list to include only relevant details
+      // using map like this appends a {} for each 'app' in list
       const apps = list.map((app) => ({
         id: app.pm_id,
         name: app.name,
-        status: app.pm2_env.status, // Optionally include status (e.g., online, stopped)
+        status: app.pm2_env.status,
         port: app.pm2_env?.PORT,
-        appProjectPath: app.cwd,
+        appProjectPath: app.pm2_env.pm_cwd ?? "no cwd",
       }));
 
       // return res.json(apps);
