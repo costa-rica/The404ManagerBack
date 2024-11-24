@@ -1,25 +1,13 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-// Secret key (replace this with a secure value or an environment variable)
-const secretKey = process.env.SECRET_KEY;
-
 function createToken(user) {
-  // Here, we're adding the user ID to the token
   const payload = { userId: user.id };
+  const secretKey = process.env.SECRET_KEY;
+  console.log("secret eky: ", process.env.SECRET_KEY);
   return jwt.sign(payload, secretKey, { expiresIn: "1h" });
 }
 
-function verifyToken(token) {
-  try {
-    const decoded = jwt.verify(token, secretKey);
-    return decoded;
-  } catch (error) {
-    throw new Error("Token is invalid or expired");
-  }
-}
-
-// Function to search for a user by email
 async function findUserByEmail(email) {
   try {
     const user = await User.findOne({ where: { email } });
@@ -32,4 +20,20 @@ async function findUserByEmail(email) {
   }
 }
 
-module.exports = { createToken, verifyToken, findUserByEmail };
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.status(401).json({ message: "bad token" });
+
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ message: "invalid token" });
+    req.user = user;
+    next();
+  });
+}
+
+module.exports = {
+  createToken,
+  authenticateToken,
+  findUserByEmail,
+};

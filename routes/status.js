@@ -3,13 +3,10 @@ var router = express.Router();
 const os = require("os");
 const { checkBody } = require("../modules/checkbody");
 const pm2 = require("pm2");
+const { verifyToken, authenticateToken } = require("../modules/token");
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
-
-router.get("/list-apps", (req, res) => {
+router.get("/list-apps", authenticateToken, (req, res) => {
+  console.log("- in GET /list-apps");
   const machineName = os.hostname();
 
   pm2.connect((err) => {
@@ -43,8 +40,8 @@ router.get("/list-apps", (req, res) => {
   });
 });
 
-router.post("/toggleApp", (req, res) => {
-  console.log(`- in POST /toggleApp`);
+router.post("/toggle-app", authenticateToken, (req, res) => {
+  console.log(`- in POST /toggle-app`);
   const { appName } = req.body;
   console.log(`appName: ${appName} ✅`);
 
@@ -96,29 +93,6 @@ router.post("/toggleApp", (req, res) => {
           return res.json({ result: true, appName, status: "started" });
         });
       }
-    });
-  });
-});
-
-// Route to start the Flask app
-router.post("/start-flask", (req, res) => {
-  const { appName } = req.body; // Example: { "appName": "FlaskApp" }
-
-  pm2.connect((err) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send({ error: "Failed to connect to PM2" });
-    }
-
-    pm2.start(appName, (err) => {
-      pm2.disconnect(); // Disconnect from PM2 after the operation
-      if (err) {
-        console.error(err);
-        return res
-          .status(500)
-          .send({ error: `Failed to start app: ${appName}` });
-      }
-      res.send({ message: `App ${appName} started successfully` });
     });
   });
 });

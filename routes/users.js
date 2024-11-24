@@ -23,7 +23,11 @@ router.get("/", function (req, res, next) {
 
 router.post("/register", async (req, res) => {
   console.log("in POST /register");
-
+  if (!checkBody(req.body, ["email", "password"])) {
+    return res
+      .status(401)
+      .json({ result: false, error: "Missing or empty fields" });
+  }
   const acceptedEmails = JSON.parse(process.env.ACCEPTED_EMAILS || "[]");
 
   const isAcceptedEmail = acceptedEmails.includes(req.body.email);
@@ -54,7 +58,11 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   console.log("in POST /login");
-
+  if (!checkBody(req.body, ["email", "password"])) {
+    return res
+      .status(401)
+      .json({ result: false, error: "Missing or empty fields" });
+  }
   console.log("body.email", req.body.email);
   console.log("body.password", req.body.password);
   const email = req.body.email;

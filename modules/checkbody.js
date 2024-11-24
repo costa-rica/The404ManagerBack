@@ -1,11 +1,13 @@
 const checkBody = (object) => {
-    for (const element in object) {
-        if (object[element] || object[element] != "") {
-            return true
-        } else {
-            return false
-        }
+  for (const element in object) {
+    if (object[element] || object[element] != "") {
+      console.log("return true");
+      return true;
+    } else {
+      console.log("return false");
+      return false;
     }
-}
+  }
+};
 
-module.exports = { checkBody } // Exports the function globally
+module.exports = { checkBody }; // Exports the function globally
