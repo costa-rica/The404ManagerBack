@@ -32,4 +32,13 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/status", statusRouter);
 
+const User = require("./models/user");
+const bcrypt = require("bcrypt");
+const passwordHashed = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10);
+const user = await User.create({
+  email: process.env.ADMIN_EMAIL,
+  password: passwordHashed,
+});
+console.log(`admin user added ✅`);
+
 module.exports = app;
