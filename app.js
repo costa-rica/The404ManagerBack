@@ -16,9 +16,27 @@ const sequelize = require("./models/connection"); // Import connection
 // Sync database
 sequelize
   .sync()
-  .then(() => {
+  .then(async () => {
     console.log("Database & tables created!");
     console.log(`${process.env.SQLITE_STORAGE_PATH}/404serverManagerDb.sqlite`);
+
+    // Remove this after testing is complete
+    if (process.env.NODE_ENV === "test") {
+      const User = require("./models/user");
+      const bcrypt = require("bcrypt");
+      const passwordHashed = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10);
+
+      try {
+        const user = await User.create({
+          email: process.env.ADMIN_EMAIL,
+          password: passwordHashed,
+        });
+        console.log("Admin user added ✅", user);
+      } catch (error) {
+        console.error("Error adding admin user:", error);
+      }
+    }
+    // END remove
   })
   .catch((error) => console.error("Error creating database tables:", error));
 
@@ -31,14 +49,5 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/status", statusRouter);
-
-const User = require("./models/user");
-const bcrypt = require("bcrypt");
-const passwordHashed = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10);
-const user = await User.create({
-  email: process.env.ADMIN_EMAIL,
-  password: passwordHashed,
-});
-console.log(`admin user added ✅`);
 
 module.exports = app;
