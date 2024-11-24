@@ -81,7 +81,7 @@ router.post("/toggleApp", (req, res) => {
               .status(500)
               .json({ result: false, error: "Failed to stop app" });
           }
-          return res.json({ result: true, appName, status: "stopped" });
+          return res.json({ result: true, appName, appStatus });
         });
       } else {
         // Start the app if it's not running
@@ -93,7 +93,7 @@ router.post("/toggleApp", (req, res) => {
               .status(500)
               .json({ result: false, error: "Failed to start app" });
           }
-          return res.json({ result: true, appName, status: "started" });
+          return res.json({ result: true, appName, appStatus });
         });
       }
     });
