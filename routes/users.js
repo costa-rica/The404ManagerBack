@@ -2,11 +2,7 @@ var express = require("express");
 var router = express.Router();
 const os = require("os");
 const { checkBody } = require("../modules/checkbody");
-const {
-  createToken,
-  verifyToken,
-  findUserByEmail,
-} = require("../modules/token");
+const { createToken, findUserByEmail } = require("../modules/token");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 

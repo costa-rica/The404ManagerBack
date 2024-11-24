@@ -3,7 +3,7 @@ var router = express.Router();
 const os = require("os");
 const { checkBody } = require("../modules/checkbody");
 const pm2 = require("pm2");
-const { verifyToken, authenticateToken } = require("../modules/token");
+const { authenticateToken } = require("../modules/token");
 
 router.get("/list-apps", authenticateToken, (req, res) => {
   console.log("- in GET /list-apps");
