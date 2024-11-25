@@ -31,8 +31,8 @@ router.get("/combined", async (req, res) => {
     // return res
     //   .status(500)
     //   .json({ result: false, error: "Unable to read syslog file." });
-    responseBody["syslog"] = fauxDonnes.syslog;
-    // responseBody['syslog']=false
+    // responseBody["syslog"] = fauxDonnes.syslog;
+    responseBody["syslog"] = false;
   }
 
   try {
