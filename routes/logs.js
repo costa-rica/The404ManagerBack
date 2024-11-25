@@ -39,7 +39,7 @@ router.get("/combined", authenticateToken, async (req, res) => {
       pm2CombinedError,
       "utf8"
     );
-    responseBody["dataPm2CombinedError"] = dataPm2CombinedError;
+    responseBody["pm2CombinedError"] = dataPm2CombinedError;
     console.log("----> read dataPm2CombinedError and added");
   } catch (error) {
     responseBody["dataPm2CombinedError"] = false;
