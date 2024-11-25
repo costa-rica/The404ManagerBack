@@ -41,6 +41,7 @@ router.get("/list-apps", authenticateToken, (req, res) => {
 
 router.post("/toggle-app", authenticateToken, (req, res) => {
   console.log(`- in POST /toggle-app`);
+  console.log(`appName: ${appName}`);
   const { appName } = req.body;
   if (!checkBody(req.body, ["appName"])) {
     return res

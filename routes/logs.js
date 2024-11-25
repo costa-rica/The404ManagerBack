@@ -18,7 +18,7 @@ router.get("/combined", authenticateToken, async (req, res) => {
   try {
     const dataSyslog = await fs.promises.readFile(syslogPath, "utf8");
     responseBody["syslog"] = dataSyslog;
-    console.log("----> read syslog and added");
+    // console.log("----> read syslog and added");
   } catch (error) {
     console.error("Error reading syslog:", error);
     responseBody["syslog"] = false;
@@ -29,7 +29,7 @@ router.get("/combined", authenticateToken, async (req, res) => {
       "utf8"
     );
     responseBody["pm2CombinedOutput"] = dataPm2CombinedOutput;
-    console.log("----> read pm2CombinedOutput and added");
+    // console.log("----> read pm2CombinedOutput and added");
   } catch (error) {
     responseBody["pm2CombinedOutput"] = false;
     console.error("Error reading pm2CombinedOutput:", error);
@@ -40,7 +40,7 @@ router.get("/combined", authenticateToken, async (req, res) => {
       "utf8"
     );
     responseBody["pm2CombinedError"] = dataPm2CombinedError;
-    console.log("----> read dataPm2CombinedError and added");
+    // console.log("----> read dataPm2CombinedError and added");
   } catch (error) {
     responseBody["dataPm2CombinedError"] = false;
     console.error("Error reading pm2CombinedError:", error);
