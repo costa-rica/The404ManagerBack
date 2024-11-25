@@ -8,56 +8,41 @@ const path = require("path");
 
 // Route to read and return the syslog file
 router.get("/combined", async (req, res) => {
-  //   const syslogPath = "/var/log/syslog";
   const syslogPath = process.env.FILE_PATH_SYSLOG;
   const pm2CombinedOutput = process.env.FILE_PATH_PM2_OUTPUT;
   const pm2CombinedError = process.env.FILE_PATH_PM2_ERROR;
 
   const responseBody = {};
   try {
-    // Asynchronously read the file
     const dataSyslog = await fs.promises.readFile(syslogPath, "utf8");
-
-    // Return the file content as plain text
-    res.setHeader("Content-Type", "text/plain");
-    // res.send(data);
-    // return res.json({ result: true, data });
     responseBody["syslog"] = dataSyslog;
+    console.log("----> read syslog and added");
   } catch (error) {
     console.error("Error reading syslog:", error);
-    // return res.json(fauxDonnes);
-
-    // Handle errors, such as permission issues or file not found
-    // return res
-    //   .status(500)
-    //   .json({ result: false, error: "Unable to read syslog file." });
-    // responseBody["syslog"] = fauxDonnes.syslog;
     responseBody["syslog"] = false;
   }
-
   try {
-    // Asynchronously read the file
     const dataPm2CombinedOutput = await fs.promises.readFile(
       pm2CombinedOutput,
       "utf8"
     );
     responseBody["pm2CombinedOutput"] = dataPm2CombinedOutput;
+    console.log("----> read pm2CombinedOutput and added");
   } catch (error) {
     responseBody["pm2CombinedOutput"] = false;
     console.error("Error reading pm2CombinedOutput:", error);
   }
   try {
-    // Asynchronously read the file
     const dataPm2CombinedError = await fs.promises.readFile(
       pm2CombinedError,
       "utf8"
     );
     responseBody["dataPm2CombinedError"] = dataPm2CombinedError;
+    console.log("----> read dataPm2CombinedError and added");
   } catch (error) {
     responseBody["dataPm2CombinedError"] = false;
     console.error("Error reading pm2CombinedError:", error);
   }
-
   return res.json({ responseBody });
 });
 
