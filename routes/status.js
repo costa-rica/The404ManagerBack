@@ -7,7 +7,6 @@ const { authenticateToken } = require("../modules/token");
 
 router.get("/list-apps", authenticateToken, (req, res) => {
   console.log("- in GET /list-apps");
-  const machineName = os.hostname();
 
   pm2.connect((err) => {
     if (err) {
@@ -44,7 +43,11 @@ router.post("/toggle-app", authenticateToken, (req, res) => {
   console.log(`- in POST /toggle-app`);
   const { appName } = req.body;
   console.log(`appName: ${appName} ✅`);
-
+  if (!checkBody(req.body, ["appName"])) {
+    return res
+      .status(401)
+      .json({ result: false, error: "Missing or empty fields" });
+  }
   pm2.connect((err) => {
     if (err) {
       console.error("Error connecting to PM2:", err);
