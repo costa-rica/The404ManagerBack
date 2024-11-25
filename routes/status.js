@@ -42,7 +42,6 @@ router.get("/list-apps", authenticateToken, (req, res) => {
 router.post("/toggle-app", authenticateToken, (req, res) => {
   console.log(`- in POST /toggle-app`);
   const { appName } = req.body;
-  console.log(`appName: ${appName} ✅`);
   if (!checkBody(req.body, ["appName"])) {
     return res
       .status(401)
@@ -65,11 +64,24 @@ router.post("/toggle-app", authenticateToken, (req, res) => {
           .status(404)
           .json({ result: false, error: `App "${appName}" not found` });
       }
-      console.log(`--> processDescription:`);
-      console.log(processDescription);
       const appStatus = processDescription[0].pm2_env.status;
-      console.log(`--> appStatus:`);
-      console.log(appStatus);
+
+      if (appName.includes("The404")) {
+        console.log("---> Caught The404 app");
+        pm2.restart(appName, (err, proc) => {
+          if (err) {
+            console.error(`Failed to restart app "${appName}":`, err);
+            pm2.disconnect(); // Disconnect to clean up the PM2 connection
+            process.exit(1);
+          }
+
+          console.log(`App "${appName}" restarted successfully.`);
+          pm2.disconnect(); // Disconnect after the operation is complete
+        });
+
+        return res.json({ result: true, status: "restarted" });
+      }
+      console.log("-----> fell through The404 filter");
 
       if (appStatus === "online") {
         // Stop the app if it's running
