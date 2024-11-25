@@ -16,12 +16,15 @@ router.get("/syslog", async (req, res) => {
 
     // Return the file content as plain text
     res.setHeader("Content-Type", "text/plain");
-    res.send(data);
+    // res.send(data);
+    return res.json({ result: true, data });
   } catch (error) {
     console.error("Error reading syslog:", error);
 
     // Handle errors, such as permission issues or file not found
-    res.status(500).json({ error: "Unable to read syslog file." });
+    return res
+      .status(500)
+      .json({ result: false, error: "Unable to read syslog file." });
   }
 });
 
