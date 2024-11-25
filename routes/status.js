@@ -69,6 +69,8 @@ router.post("/toggle-app", authenticateToken, (req, res) => {
 
       if (appName.includes("The404")) {
         console.log("---> Caught The404 app");
+        res.json({ result: true, status: "restarted" });
+        // try to send response befroe restarting
         pm2.restart(appName, (err, proc) => {
           if (err) {
             console.error(`Failed to restart app "${appName}":`, err);
@@ -80,7 +82,7 @@ router.post("/toggle-app", authenticateToken, (req, res) => {
           pm2.disconnect(); // Disconnect after the operation is complete
         });
 
-        return res.json({ result: true, status: "restarted" });
+        // return res.json({ result: true, status: "restarted" });
       }
       console.log("-----> fell through The404 filter");
 
